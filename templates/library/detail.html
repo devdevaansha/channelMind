@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+{% block title %}{{ video.title }} — atva{% endblock %}
+{% block content %}
+
+<div class="detail-hero">
+  <a href="{% url 'library:index' %}" class="detail-breadcrumb">
+    <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18"/></svg>
+    Back to Library
+  </a>
+  <div class="flex items-start justify-between gap-4">
+    <div>
+      <h1 class="detail-title">{{ video.title }}</h1>
+      <div class="detail-meta">
+        <span>{{ video.channel.title }}</span>
+        {% if video.published_at %}
+          <span class="detail-meta-sep">&middot;</span>
+          <span>{{ video.published_at|date:"M j, Y" }}</span>
+        {% endif %}
+        {% if video.duration_sec %}
+          <span class="detail-meta-sep">&middot;</span>
+          <span>{{ video.duration_sec|floatformat:0 }}s</span>
+        {% endif %}
+      </div>
+    </div>
+    <a href="{{ video.youtube_url }}" target="_blank" rel="noopener"
+       class="btn-secondary btn-sm shrink-0">
+      <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 0 0 3 8.25v10.5A2.25 2.25 0 0 0 5.25 21h10.5A2.25 2.25 0 0 0 18 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"/></svg>
+      YouTube
+    </a>
+  </div>
+</div>
+
+<!-- Category assignment -->
+<div class="card-padded mb-6">
+  <form hx-post="{% url 'library:assign_category' video.id %}"
+        hx-target="#category-feedback"
+        hx-swap="innerHTML"
+        class="flex items-center gap-3 flex-wrap">
+    {% csrf_token %}
+    <label class="form-label" style="margin-bottom: 0;">Category</label>
+    <select name="category_id" class="form-input w-auto">
+      <option value="">— Unassigned —</option>
+      {% for cat in categories %}
+      <option value="{{ cat.id }}" {% if video.category_id == cat.id %}selected{% endif %}>
+        {{ cat.name }}
+      </option>
+      {% endfor %}
+    </select>
+    <button type="submit" class="btn-primary btn-sm">Save</button>
+    <span id="category-feedback" style="font-size: var(--text-xs); color: var(--color-green-600);"></span>
+    {% if video.auto_category_confidence %}
+    <span style="font-size: var(--text-xs); color: var(--text-tertiary); margin-left: auto;">
+      Auto-detected · {{ video.auto_category_confidence|floatformat:2 }} confidence
+    </span>
+    {% endif %}
+  </form>
+</div>
+
+<!-- Tabs: Transcript / Summary -->
+<div class="card">
+  <div class="tabs" style="padding: 0 var(--space-5);">
+    <button onclick="showTab('transcript', this)"
+            id="tab-transcript"
+            class="tab-btn tab-btn-active">Transcript</button>
+    {% if summary %}
+    <button onclick="showTab('summary', this)"
+            id="tab-summary"
+            class="tab-btn">Summary</button>
+    {% endif %}
+  </div>
+
+  <div class="card-body">
+    <!-- Transcript -->
+    <div id="pane-transcript">
+      {% if transcript %}
+      <div class="transcript-scroll">
+        {% for seg in transcript.segments %}
+        <div class="transcript-segment">
+          <span class="transcript-timestamp">{{ seg.start|floatformat:1 }}s</span>
+          <p class="transcript-text">{{ seg.text }}</p>
+        </div>
+        {% endfor %}
+      </div>
+      {% else %}
+      <div class="empty-state" style="padding: var(--space-12) var(--space-4);">
+        <div class="empty-state-icon">📝</div>
+        <div class="empty-state-title">No transcript available</div>
+        <div class="empty-state-text">The transcript will appear here once processing is complete.</div>
+      </div>
+      {% endif %}
+    </div>
+
+    <!-- Summary -->
+    {% if summary %}
+    <div id="pane-summary" class="hidden prose">
+      {{ summary|linebreaks }}
+    </div>
+    {% endif %}
+  </div>
+</div>
+
+<script>
+function showTab(name, btn) {
+  ['transcript', 'summary'].forEach(t => {
+    const pane = document.getElementById('pane-' + t);
+    const b = document.getElementById('tab-' + t);
+    if (pane) pane.classList.toggle('hidden', t !== name);
+    if (b) b.classList.toggle('tab-btn-active', t === name);
+  });
+}
+</script>
+
+{% endblock %}

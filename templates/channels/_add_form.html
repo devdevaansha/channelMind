@@ -1,0 +1,37 @@
+<form
+  data-atva-add-channel="1"
+  method="post"
+  action="{% url 'channels:add' %}"
+  hx-post="{% url 'channels:add' %}"
+  hx-target="#add-form-container"
+  hx-swap="innerHTML"
+  hx-on:htmx:afterRequest="if(event.detail.xhr && event.detail.xhr.status >= 200 && event.detail.xhr.status < 300){ document.getElementById('add-modal').classList.add('hidden'); }"
+  class="space-y-4">
+  {% csrf_token %}
+
+  <div class="form-group">
+    <label class="form-label">{{ form.channel_url.label }}</label>
+    {{ form.channel_url }}
+    {% if form.channel_url.errors %}
+      <p class="form-error">{{ form.channel_url.errors|join:", " }}</p>
+    {% endif %}
+  </div>
+
+  <div class="flex items-center gap-2">
+    {{ form.summarize_enabled }}
+    <label for="{{ form.summarize_enabled.id_for_label }}" class="form-label" style="margin-bottom: 0;">
+      {{ form.summarize_enabled.label }}
+    </label>
+  </div>
+
+  <div class="form-group">
+    <label class="form-label">{{ form.default_category.label }}</label>
+    {{ form.default_category }}
+  </div>
+
+  <button type="submit" class="btn-primary btn-block"
+    hx-indicator="#add-spinner">
+    <span id="add-spinner" class="htmx-indicator"><span class="spinner spinner-sm"></span></span>
+    Add Channel &amp; Sync
+  </button>
+</form>

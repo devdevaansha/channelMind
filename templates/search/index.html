@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% block title %}Search — atva{% endblock %}
+{% block content %}
+
+<div class="page-header">
+  <div class="page-header-left">
+    <h1 class="page-title">Search</h1>
+    <p class="page-subtitle">Find content across all transcripts and summaries</p>
+  </div>
+</div>
+
+<div class="card-padded mb-6">
+  <div class="filter-bar" style="margin-bottom: 0;">
+    <!-- Main search input -->
+    <div class="search-input-wrapper">
+      <svg class="search-input-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"/></svg>
+      <input
+        type="text"
+        name="q"
+        value="{{ query }}"
+        placeholder="Search transcripts and summaries..."
+        class="form-input"
+        hx-get="{% url 'search:index' %}"
+        hx-trigger="keyup changed delay:700ms"
+        hx-target="#results"
+        hx-swap="innerHTML"
+        hx-include="[name='channel'],[name='category'],[name='type']"
+        hx-indicator="#search-spinner">
+    </div>
+
+    <select name="channel" class="form-input w-auto"
+      hx-get="{% url 'search:index' %}"
+      hx-trigger="change"
+      hx-target="#results"
+      hx-include="[name='q'],[name='category'],[name='type']">
+      <option value="">All Channels</option>
+      {% for ch in channels %}
+      <option value="{{ ch.id }}" {% if selected_channel == ch.id|stringformat:'s' %}selected{% endif %}>{{ ch.title }}</option>
+      {% endfor %}
+    </select>
+
+    <select name="category" class="form-input w-auto"
+      hx-get="{% url 'search:index' %}"
+      hx-trigger="change"
+      hx-target="#results"
+      hx-include="[name='q'],[name='channel'],[name='type']">
+      <option value="">All Categories</option>
+      {% for cat in categories %}
+      <option value="{{ cat.id }}" {% if selected_category == cat.id|stringformat:'s' %}selected{% endif %}>{{ cat.name }}</option>
+      {% endfor %}
+    </select>
+
+    <select name="type" class="form-input w-auto"
+      hx-get="{% url 'search:index' %}"
+      hx-trigger="change"
+      hx-target="#results"
+      hx-include="[name='q'],[name='channel'],[name='category']">
+      <option value="">Transcript + Summary</option>
+      <option value="transcript" {% if selected_type == 'transcript' %}selected{% endif %}>Transcript only</option>
+      <option value="summary" {% if selected_type == 'summary' %}selected{% endif %}>Summary only</option>
+    </select>
+
+    <span id="search-spinner" class="htmx-indicator">
+      <span class="spinner spinner-sm"></span>
+    </span>
+  </div>
+</div>
+
+<!-- Results -->
+<div id="results">
+  {% include "search/_result_item.html" %}
+</div>
+
+{% endblock %}

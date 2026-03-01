@@ -1,0 +1,55 @@
+{% if error %}
+<div class="alert alert-error">
+  <span>Search error: {{ error }}</span>
+</div>
+{% elif results %}
+<div class="space-y-4">
+  {% for result in results %}
+  <div class="search-result">
+    <div class="search-result-header">
+      <div>
+        {% if result.video %}
+        <a href="{% url 'library:detail' result.video.id %}" class="search-result-title">
+          {{ result.video.title|truncatechars:80 }}
+        </a>
+        <div class="search-result-meta">
+          {{ result.video.channel.title }}
+          {% if result.video.published_at %} &middot; {{ result.video.published_at|date:"M j, Y" }}{% endif %}
+          {% if result.video.category %} &middot; {{ result.video.category.name }}{% endif %}
+        </div>
+        {% else %}
+        <span class="search-result-meta">(Video not found)</span>
+        {% endif %}
+      </div>
+      <span class="search-result-score">
+        {{ result.score }}
+        {% if result.start is not None %}
+          &middot; {{ result.start|floatformat:0 }}s
+        {% endif %}
+      </span>
+    </div>
+    <p class="search-result-excerpt">
+      {{ result.text|truncatechars:400 }}
+    </p>
+    {% if result.source %}
+    <div class="search-result-source">
+      Source:
+      <a href="{{ result.source }}" target="_blank" rel="noopener noreferrer">{{ result.source }}</a>
+    </div>
+    {% endif %}
+  </div>
+  {% endfor %}
+</div>
+{% elif query %}
+<div class="empty-state">
+  <div class="empty-state-icon">🔍</div>
+  <div class="empty-state-title">No results found</div>
+  <div class="empty-state-text">No results for "{{ query }}". Try different keywords or filters.</div>
+</div>
+{% else %}
+<div class="empty-state">
+  <div class="empty-state-icon">🔍</div>
+  <div class="empty-state-title">Start searching</div>
+  <div class="empty-state-text">Enter a search query above to find content across your transcripts.</div>
+</div>
+{% endif %}

@@ -1,0 +1,67 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.egg-info/
+dist/
+build/
+.eggs/
+.venv/
+venv/
+env/
+
+# Django
+*.log
+local_settings.py
+db.sqlite3
+staticfiles/
+mediafiles/
+
+# Docker / Secrets
+.env
+secrets/*.json
+# Keep the .gitkeep placeholder (secrets dir is tracked, keys are not)
+!secrets/.gitkeep
+
+# IDE / AI tools
+.vscode/
+.idea/
+.cursor/
+.claude/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Data (never commit)
+/data/
+
+# Test
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Debug / test artifacts (ad-hoc scripts and screenshots)
+capture_*.py
+check_*.py
+reset_*.py
+retest_*.py
+run_*.py
+final_*.py
+test_channel_add.py
+test_duplicate_channel.py
+test_final_comprehensive.py
+test_modal_manual.py
+test_pipeline.py
+test_post_rebuild.py
+test_sync_*.py
+test_with_logging.py
+*.png
+*_page*.html
+*_state*.html
+response_content.html
+error_500_page.html
+post_rebuild_page_source.html

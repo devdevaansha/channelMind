@@ -1,0 +1,5 @@
+-r base.txt
+yt-dlp>=2024.3
+faster-whisper>=1.0
+# torch is installed at container startup by entrypoint_worker.sh
+# based on detected CUDA driver version (cu118 / cu121 / cu124)

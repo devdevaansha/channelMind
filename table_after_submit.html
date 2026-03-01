@@ -1,0 +1,285 @@
+<html lang="en" class="fonts-loaded"><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Channels — atva</title>
+  
+  
+  <link rel="stylesheet" href="https://use.typekit.net/poi5szq.css" media="all" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="https://use.typekit.net/poi5szq.css"></noscript>
+  <link rel="stylesheet" href="/static/css/app.css">
+  
+  <script src="/static/js/app.js" defer=""></script>
+<script src="https://unpkg.com/htmx.org@1.9.12" async=""></script><script src="https://unpkg.com/htmx-ext-sse@2.2.2/sse.js" async=""></script></head>
+<body>
+  <div class="app-shell">
+
+    <header class="app-header">
+      <div class="app-header-inner">
+        <a href="/channels/" class="app-logo">
+          <span class="app-logo-mark">A</span>
+          atva
+        </a>
+        <nav class="app-nav">
+          
+
+<a href="/channels/" class="app-nav-link app-nav-link--active">
+  <svg class="app-nav-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 20.25h12m-7.5-3v3m3-3v3m-10.125-3h17.25c.621 0 1.125-.504 1.125-1.125V4.875c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125Z"></path></svg>
+  Channels
+</a>
+<a href="/jobs/" class="app-nav-link ">
+  <svg class="app-nav-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 0 1 6 3.75h2.25A2.25 2.25 0 0 1 10.5 6v2.25a2.25 2.25 0 0 1-2.25 2.25H6a2.25 2.25 0 0 1-2.25-2.25V6Zm0 9.75A2.25 2.25 0 0 1 6 13.5h2.25a2.25 2.25 0 0 1 2.25 2.25V18a2.25 2.25 0 0 1-2.25 2.25H6A2.25 2.25 0 0 1 3.75 18v-2.25ZM13.5 6a2.25 2.25 0 0 1 2.25-2.25H18A2.25 2.25 0 0 1 20.25 6v2.25A2.25 2.25 0 0 1 18 10.5h-2.25a2.25 2.25 0 0 1-2.25-2.25V6Zm0 9.75a2.25 2.25 0 0 1 2.25-2.25H18a2.25 2.25 0 0 1 2.25 2.25V18A2.25 2.25 0 0 1 18 20.25h-2.25a2.25 2.25 0 0 1-2.25-2.25v-2.25Z"></path></svg>
+  Jobs
+</a>
+<a href="/library/" class="app-nav-link ">
+  <svg class="app-nav-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m15.75 10.5 4.72-4.72a.75.75 0 0 1 1.28.53v11.38a.75.75 0 0 1-1.28.53l-4.72-4.72M4.5 18.75h9a2.25 2.25 0 0 0 2.25-2.25v-9a2.25 2.25 0 0 0-2.25-2.25h-9A2.25 2.25 0 0 0 2.25 7.5v9a2.25 2.25 0 0 0 2.25 2.25Z"></path></svg>
+  Library
+</a>
+<a href="/search/" class="app-nav-link ">
+  <svg class="app-nav-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"></path></svg>
+  Search
+</a>
+
+
+        </nav>
+      </div>
+    </header>
+
+    
+
+    <main class="app-main">
+      
+
+<div class="page-header">
+  <div class="page-header-left">
+    <h1 class="page-title">Channels</h1>
+    <p class="page-subtitle">Manage your YouTube channel subscriptions</p>
+  </div>
+  <button class="btn-primary" onclick="document.getElementById('add-modal').classList.remove('hidden')">
+    <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"></path></svg>
+    Add Channel
+  </button>
+</div>
+
+<!-- Add Channel Modal -->
+<div id="add-modal" class="modal-backdrop">
+  <div class="modal-panel modal-md">
+    <div class="modal-header">
+      <h2 class="modal-header-title">Add YouTube Channel</h2>
+      <button class="modal-close" onclick="document.getElementById('add-modal').classList.add('hidden')">×</button>
+    </div>
+    <div class="modal-body">
+      <div id="add-form-container" class="">{# 
+  HTMX response for successful add-channel.
+  - Inserts the new channel row into the table out-of-band
+  - Re-renders a fresh add form into the modal container (the normal HTMX swap target)
+#}
+
+
+
+<form data-atva-add-channel="1" method="post" action="/channels/add/" hx-post="/channels/add/" hx-target="#add-form-container" hx-swap="innerHTML" hx-on::after-request="if(event.detail.successful){ document.getElementById('add-modal').classList.add('hidden'); }" class="space-y-4">
+  <input type="hidden" name="csrfmiddlewaretoken" value="o5wm0CFTVnnKVfNSFuxyBxVO5VWGXNn2FLEgfthYkAqchguXujiYXemTIpQfycRt">
+
+  <div class="form-group">
+    <label class="form-label">YouTube Channel URL or @handle</label>
+    <input type="text" name="channel_url" placeholder="https://www.youtube.com/@channelname or UC..." class="form-input" maxlength="500" required="" id="id_channel_url">
+    
+  </div>
+
+  <div class="flex items-center gap-2">
+    <input type="checkbox" name="summarize_enabled" id="id_summarize_enabled">
+    <label for="id_summarize_enabled" class="form-label" style="margin-bottom: 0;">
+      Summarize videos with Gemini
+    </label>
+  </div>
+
+  <div class="form-group">
+    <label class="form-label">Default Category</label>
+    <select name="default_category" class="form-input" id="id_default_category">
+  <option value="" selected="">— No default category —</option>
+
+</select>
+  </div>
+
+  <button type="submit" class="btn-primary btn-block" hx-indicator="#add-spinner">
+    <span id="add-spinner" class="htmx-indicator"><span class="spinner spinner-sm"></span></span>
+    Add Channel &amp; Sync
+  </button>
+</form>
+
+
+</div>
+    </div>
+  </div>
+</div>
+
+<!-- Channel Table -->
+<div class="card">
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th>Channel</th>
+          <th>Videos</th>
+          <th>Summarize</th>
+          <th>Last Sync</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="channel-list">
+        
+          <tr id="channel-9cc03416-bbd1-4bec-914e-b6c9b4f195c8">
+  <td>
+    <div class="font-medium">Worldwide Export Import Trainer</div>
+    <div style="font-size: var(--text-xs); color: var(--text-tertiary); margin-top: 2px;">UCWTzftqE1MEnZvbeYunNnaA</div>
+  </td>
+  <td>
+    <span class="font-medium">0</span>
+    <span style="color: var(--text-tertiary);"> videos</span>
+    <span style="font-size: var(--text-xs); color: var(--color-green-600); margin-left: var(--space-1);">
+      ( done)
+    </span>
+  </td>
+  <td>
+    
+      <span class="badge badge-gray">Disabled</span>
+    
+  </td>
+  <td style="color: var(--text-tertiary); font-size: var(--text-xs);">
+    Never
+  </td>
+  <td>
+    <button class="btn-link btn-xs" data-atva-sync="1" data-post-url="/channels/9cc03416-bbd1-4bec-914e-b6c9b4f195c8/sync/" hx-post="/channels/9cc03416-bbd1-4bec-914e-b6c9b4f195c8/sync/" hx-swap="none" hx-confirm="Trigger sync for Worldwide Export Import Trainer?">
+      <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182"></path></svg>
+      Sync
+    </button>
+  </td>
+</tr>
+
+        
+          <tr id="channel-4816e1ec-6d5f-4843-80fe-cd1c30fa59b1">
+  <td>
+    <div class="font-medium">OpenAI</div>
+    <div style="font-size: var(--text-xs); color: var(--text-tertiary); margin-top: 2px;">UCXZCJLdBC09xxGZ6gcdrc6A</div>
+  </td>
+  <td>
+    <span class="font-medium">2</span>
+    <span style="color: var(--text-tertiary);"> videos</span>
+    <span style="font-size: var(--text-xs); color: var(--color-green-600); margin-left: var(--space-1);">
+      ( done)
+    </span>
+  </td>
+  <td>
+    
+      <span class="badge badge-green">Enabled</span>
+    
+  </td>
+  <td style="color: var(--text-tertiary); font-size: var(--text-xs);">
+    1&nbsp;hour, 29&nbsp;minutes ago
+  </td>
+  <td>
+    <button class="btn-link btn-xs" data-atva-sync="1" data-post-url="/channels/4816e1ec-6d5f-4843-80fe-cd1c30fa59b1/sync/" hx-post="/channels/4816e1ec-6d5f-4843-80fe-cd1c30fa59b1/sync/" hx-swap="none" hx-confirm="Trigger sync for OpenAI?">
+      <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182"></path></svg>
+      Sync
+    </button>
+  </td>
+</tr>
+
+        
+          <tr id="channel-21fadadf-8b77-4e7f-8194-f9bb69600583">
+  <td>
+    <div class="font-medium">DOOM</div>
+    <div style="font-size: var(--text-xs); color: var(--text-tertiary); margin-top: 2px;">UC8Mw2Mx1r1NgIRHPKmfIYlQ</div>
+  </td>
+  <td>
+    <span class="font-medium">2</span>
+    <span style="color: var(--text-tertiary);"> videos</span>
+    <span style="font-size: var(--text-xs); color: var(--color-green-600); margin-left: var(--space-1);">
+      ( done)
+    </span>
+  </td>
+  <td>
+    
+      <span class="badge badge-green">Enabled</span>
+    
+  </td>
+  <td style="color: var(--text-tertiary); font-size: var(--text-xs);">
+    1&nbsp;hour, 31&nbsp;minutes ago
+  </td>
+  <td>
+    <button class="btn-link btn-xs" data-atva-sync="1" data-post-url="/channels/21fadadf-8b77-4e7f-8194-f9bb69600583/sync/" hx-post="/channels/21fadadf-8b77-4e7f-8194-f9bb69600583/sync/" hx-swap="none" hx-confirm="Trigger sync for DOOM?">
+      <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182"></path></svg>
+      Sync
+    </button>
+  </td>
+</tr>
+
+        
+          <tr id="channel-90d1a0d5-b654-4eff-bae8-78db4bd7c8a3">
+  <td>
+    <div class="font-medium">Single Video Test Channel</div>
+    <div style="font-size: var(--text-xs); color: var(--text-tertiary); margin-top: 2px;">UC_single_video_test</div>
+  </td>
+  <td>
+    <span class="font-medium">1</span>
+    <span style="color: var(--text-tertiary);"> videos</span>
+    <span style="font-size: var(--text-xs); color: var(--color-green-600); margin-left: var(--space-1);">
+      ( done)
+    </span>
+  </td>
+  <td>
+    
+      <span class="badge badge-green">Enabled</span>
+    
+  </td>
+  <td style="color: var(--text-tertiary); font-size: var(--text-xs);">
+    Never
+  </td>
+  <td>
+    <button class="btn-link btn-xs" data-atva-sync="1" data-post-url="/channels/90d1a0d5-b654-4eff-bae8-78db4bd7c8a3/sync/" hx-post="/channels/90d1a0d5-b654-4eff-bae8-78db4bd7c8a3/sync/" hx-swap="none" hx-confirm="Trigger sync for Single Video Test Channel?">
+      <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182"></path></svg>
+      Sync
+    </button>
+  </td>
+</tr>
+
+        
+          <tr id="channel-5b1f7854-af3d-40a7-8ff8-81e6d98af10d">
+  <td>
+    <div class="font-medium">HINDI STORY WORLD 11A</div>
+    <div style="font-size: var(--text-xs); color: var(--text-tertiary); margin-top: 2px;">UCkh0CD8i_95fewz9osXrRvw</div>
+  </td>
+  <td>
+    <span class="font-medium">36</span>
+    <span style="color: var(--text-tertiary);"> videos</span>
+    <span style="font-size: var(--text-xs); color: var(--color-green-600); margin-left: var(--space-1);">
+      ( done)
+    </span>
+  </td>
+  <td>
+    
+      <span class="badge badge-green">Enabled</span>
+    
+  </td>
+  <td style="color: var(--text-tertiary); font-size: var(--text-xs);">
+    10&nbsp;hours, 14&nbsp;minutes ago
+  </td>
+  <td>
+    <button class="btn-link btn-xs" data-atva-sync="1" data-post-url="/channels/5b1f7854-af3d-40a7-8ff8-81e6d98af10d/sync/" hx-post="/channels/5b1f7854-af3d-40a7-8ff8-81e6d98af10d/sync/" hx-swap="none" hx-confirm="Trigger sync for HINDI STORY WORLD 11A?">
+      <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182"></path></svg>
+      Sync
+    </button>
+  </td>
+</tr>
+
+        
+      </tbody>
+    </table>
+  </div>
+</div>
+
+    </main>
+
+  </div>
+
+
+</body></html>

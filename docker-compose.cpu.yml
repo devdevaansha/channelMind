@@ -1,0 +1,19 @@
+services:
+  worker:
+    build:
+      context: .
+      dockerfile: Dockerfile.worker.cpu
+    environment:
+      TORCH_CUDA_TAG: cpu
+      WHISPER_DEVICE: cpu
+    deploy: {}
+
+  beat:
+    build:
+      context: .
+      dockerfile: Dockerfile.worker.cpu
+
+  flower:
+    build:
+      context: .
+      dockerfile: Dockerfile.worker.cpu

@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block title %}Channels — atva{% endblock %}
+{% block content %}
+
+<div class="page-header">
+  <div class="page-header-left">
+    <h1 class="page-title">Channels</h1>
+    <p class="page-subtitle">Manage your YouTube channel subscriptions</p>
+  </div>
+  <button
+    class="btn-primary"
+    onclick="document.getElementById('add-modal').classList.remove('hidden')">
+    <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
+    Add Channel
+  </button>
+</div>
+
+<!-- Add Channel Modal -->
+<div id="add-modal" class="hidden modal-backdrop">
+  <div class="modal-panel modal-md">
+    <div class="modal-header">
+      <h2 class="modal-header-title">Add YouTube Channel</h2>
+      <button class="modal-close"
+        onclick="document.getElementById('add-modal').classList.add('hidden')">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div id="add-form-container">
+        {% include "channels/_add_form.html" %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Channel Table -->
+<div class="card">
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th>Channel</th>
+          <th>Videos</th>
+          <th>Summarize</th>
+          <th>Last Sync</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="channel-list">
+        {% for channel in channels %}
+          {% include "channels/_channel_row.html" %}
+        {% empty %}
+        <tr>
+          <td colspan="5" class="table-empty">
+            <span class="table-empty-icon">📡</span>
+            <div class="empty-state-title">No channels yet</div>
+            <div class="empty-state-text">Add a YouTube channel to start transcribing videos.</div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

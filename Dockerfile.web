@@ -1,0 +1,25 @@
+FROM python:3.11-slim
+
+WORKDIR /app
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    libpq-dev \
+    fonts-freefont-ttf \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY requirements/base.txt requirements/base.txt
+COPY requirements/web.txt requirements/web.txt
+RUN pip install --no-cache-dir -r requirements/web.txt \
+    && pip uninstall -y pinecone-client 2>/dev/null || true
+
+COPY . .
+
+ENV DJANGO_SETTINGS_MODULE=config.settings.local
+RUN python manage.py collectstatic --noinput
+
+COPY entrypoint_web.sh /entrypoint_web.sh
+RUN chmod +x /entrypoint_web.sh
+
+ENTRYPOINT ["/entrypoint_web.sh"]
+CMD ["gunicorn", "config.wsgi:application", "--config", "config/gunicorn.py"]

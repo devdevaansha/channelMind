@@ -1,0 +1,39 @@
+# NVIDIA CUDA 12.1 base with cuDNN8 - provides libcublas.so.12 and other CUDA libs
+# cu121 is the standard PyTorch CUDA version with best compatibility
+FROM nvidia/cuda:12.1.1-cudnn8-runtime-ubuntu22.04
+
+WORKDIR /app
+
+# Python 3.11 via deadsnakes PPA (Ubuntu 22.04 default is 3.10)
+ENV DEBIAN_FRONTEND=noninteractive TZ=UTC
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    software-properties-common \
+    && add-apt-repository -y ppa:deadsnakes/ppa \
+    && apt-get update \
+    && apt-get install -y --no-install-recommends \
+    python3.11 \
+    python3.11-venv \
+    python3.11-dev \
+    python3.11-distutils \
+    curl \
+    build-essential \
+    libpq-dev \
+    ffmpeg \
+    && rm -rf /var/lib/apt/lists/* \
+    && curl -sS https://bootstrap.pypa.io/get-pip.py | python3.11 \
+    && python3.11 -m pip install --upgrade pip \
+    && update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.11 1 \
+    && update-alternatives --install /usr/bin/python python /usr/bin/python3.11 1
+
+COPY requirements/worker.txt requirements/worker.txt
+COPY requirements/base.txt requirements/base.txt
+RUN python3 -m pip install --no-cache-dir -r requirements/worker.txt \
+    && python3 -m pip uninstall -y pinecone-client 2>/dev/null || true
+
+COPY . .
+
+COPY entrypoint_worker.sh /entrypoint_worker.sh
+RUN chmod +x /entrypoint_worker.sh
+
+ENTRYPOINT ["/entrypoint_worker.sh"]
+CMD ["celery", "-A", "config.celery", "worker", "--loglevel=info", "-Q", "celery,pipeline,default", "-c", "2"]

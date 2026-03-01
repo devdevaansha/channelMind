@@ -1,0 +1,32 @@
+
+        <form data-atva-add-channel="1" method="post" action="/channels/add/" hx-post="/channels/add/" hx-target="#add-form-container" hx-swap="innerHTML" hx-on::after-request="if(event.detail.successful){ document.getElementById('add-modal').classList.add('hidden'); }" class="space-y-4">
+  <input type="hidden" name="csrfmiddlewaretoken" value="mc8KMY9OBPrcZj5XISvOMatMkRG66DWEOipSfeQAxkf2w8k04J5DCXCpqRDK0CbH">
+
+  <div class="form-group">
+    <label class="form-label">YouTube Channel URL or @handle</label>
+    <input type="text" name="channel_url" placeholder="https://www.youtube.com/@channelname or UC..." class="form-input" maxlength="500" required="" id="id_channel_url">
+    
+  </div>
+
+  <div class="flex items-center gap-2">
+    <input type="checkbox" name="summarize_enabled" id="id_summarize_enabled">
+    <label for="id_summarize_enabled" class="form-label" style="margin-bottom: 0;">
+      Summarize videos with Gemini
+    </label>
+  </div>
+
+  <div class="form-group">
+    <label class="form-label">Default Category</label>
+    <select name="default_category" class="form-input" id="id_default_category">
+  <option value="" selected="">— No default category —</option>
+
+</select>
+  </div>
+
+  <button type="submit" class="btn-primary btn-block" hx-indicator="#add-spinner">
+    <span id="add-spinner" class="htmx-indicator"><span class="spinner spinner-sm"></span></span>
+    Add Channel &amp; Sync
+  </button>
+</form>
+
+      

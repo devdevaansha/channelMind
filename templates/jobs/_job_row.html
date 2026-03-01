@@ -1,0 +1,59 @@
+{% if job.status == 'running' and live_job_ids and job.id in live_job_ids %}
+<tr id="job-{{ job.id }}"
+    hx-ext="sse"
+    sse-connect="{% url 'jobs:stream' job.id %}">
+{% else %}
+<tr id="job-{{ job.id }}">
+{% endif %}
+  <td style="max-width: 20rem;">
+    <div class="font-medium truncate">{{ job.video.title|truncatechars:60 }}</div>
+    <div style="font-size: var(--text-xs); color: var(--text-tertiary); margin-top: 2px;">{{ job.video.channel.title }}</div>
+  </td>
+  <td><span class="capitalize" style="color: var(--text-secondary);">{{ job.stage }}</span></td>
+  <td>
+    {% if job.status == 'succeeded' %}
+      <span class="badge badge-green">Done</span>
+    {% elif job.status == 'failed' %}
+      <span class="badge badge-red">Failed</span>
+    {% elif job.status == 'running' %}
+      <span class="badge badge-blue">Running</span>
+    {% elif job.status == 'queued' %}
+      <span class="badge badge-gray">Queued</span>
+    {% else %}
+      <span class="badge badge-gray">{{ job.status }}</span>
+    {% endif %}
+  </td>
+  <td>
+    <div id="progress-{{ job.id }}">
+      <div class="progress-track">
+        <div id="bar-{{ job.id }}"
+             class="progress-fill"
+             style="width: {{ job.progress }}%"></div>
+      </div>
+      <div class="progress-label">{{ job.progress }}%{% if job.stage %} · {{ job.stage }}{% endif %}</div>
+    </div>
+  </td>
+  <td style="font-size: var(--text-xs); color: var(--text-tertiary);">
+    {{ job.started_at|timesince|default:"—" }}{% if job.started_at %} ago{% endif %}
+  </td>
+  <td>
+    <div class="flex items-center gap-2">
+      <button class="btn-link btn-xs"
+        hx-get="{% url 'jobs:detail' job.id %}"
+        hx-target="#job-modal-content"
+        hx-swap="innerHTML"
+        hx-on::after-request="document.getElementById('job-modal').classList.remove('hidden')">
+        Detail
+      </button>
+      {% if job.status == 'failed' %}
+      <button class="btn-link btn-xs" style="color: var(--color-amber-600);"
+        hx-post="{% url 'jobs:retry' job.id %}"
+        hx-target="#job-{{ job.id }}"
+        hx-swap="outerHTML"
+        hx-confirm="Retry this job?">
+        Retry
+      </button>
+      {% endif %}
+    </div>
+  </td>
+</tr>

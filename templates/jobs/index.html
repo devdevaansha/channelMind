@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block title %}Jobs — atva{% endblock %}
+{% block content %}
+
+<div class="page-header">
+  <div class="page-header-left">
+    <h1 class="page-title">Job Monitor</h1>
+    <p class="page-subtitle">Track transcription and processing progress</p>
+  </div>
+</div>
+
+<!-- Job Detail Modal (filled by HTMX) -->
+<div id="job-modal" class="hidden modal-backdrop">
+  <div class="modal-panel modal-lg">
+    <div id="job-modal-content"></div>
+    <div class="modal-footer">
+      <button class="btn-secondary btn-sm"
+        onclick="document.getElementById('job-modal').classList.add('hidden')">Close</button>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th>Video</th>
+          <th>Stage</th>
+          <th>Status</th>
+          <th style="width: 10rem;">Progress</th>
+          <th>Started</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for job in jobs %}
+          {% include "jobs/_job_row.html" %}
+        {% empty %}
+        <tr>
+          <td colspan="6" class="table-empty">
+            <span class="table-empty-icon">⏳</span>
+            <div class="empty-state-title">No jobs yet</div>
+            <div class="empty-state-text">Jobs appear here when channels are synced.</div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+{% endblock %}

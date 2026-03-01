@@ -1,0 +1,26 @@
+FROM python:3.11-slim
+
+WORKDIR /app
+
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    libpq-dev \
+    ffmpeg \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY requirements/worker.txt requirements/worker.txt
+COPY requirements/base.txt requirements/base.txt
+RUN python -m pip install --no-cache-dir --upgrade pip \
+    && python -m pip install --no-cache-dir -r requirements/worker.txt \
+    && python -m pip uninstall -y pinecone-client 2>/dev/null || true
+
+COPY . .
+
+COPY entrypoint_worker.sh /entrypoint_worker.sh
+RUN chmod +x /entrypoint_worker.sh
+
+ENTRYPOINT ["/entrypoint_worker.sh"]
+CMD ["celery", "-A", "config.celery", "worker", "--loglevel=info", "-Q", "celery,pipeline,default", "-c", "2"]

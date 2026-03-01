@@ -1,0 +1,58 @@
+<div class="modal-header" style="border-bottom: 1px solid var(--border-subtle);">
+  <h2 class="modal-header-title">Job Detail</h2>
+  <button class="modal-close"
+    onclick="document.getElementById('job-modal').classList.add('hidden')">&times;</button>
+</div>
+
+<div class="modal-body">
+  <div class="job-detail-grid">
+    <div class="job-detail-item">
+      <div class="job-detail-label">Video</div>
+      <div class="job-detail-value">{{ job.video.title }}</div>
+    </div>
+    <div class="job-detail-item">
+      <div class="job-detail-label">Status</div>
+      <div class="job-detail-value capitalize">{{ job.status }}</div>
+    </div>
+    <div class="job-detail-item">
+      <div class="job-detail-label">Stage</div>
+      <div class="job-detail-value capitalize">{{ job.stage }}</div>
+    </div>
+    <div class="job-detail-item">
+      <div class="job-detail-label">Progress</div>
+      <div class="job-detail-value">{{ job.progress }}%</div>
+    </div>
+    <div class="job-detail-item">
+      <div class="job-detail-label">Started</div>
+      <div class="job-detail-value">{{ job.started_at|default:"—" }}</div>
+    </div>
+    <div class="job-detail-item">
+      <div class="job-detail-label">Finished</div>
+      <div class="job-detail-value">{{ job.finished_at|default:"—" }}</div>
+    </div>
+  </div>
+
+  {% if job.error %}
+  <div class="alert alert-error mb-4">
+    <pre class="font-mono whitespace-pre-wrap" style="font-size: var(--text-xs);">{{ job.error }}</pre>
+  </div>
+  {% endif %}
+
+  {% if artifacts %}
+  <div>
+    <h3 class="font-semibold mb-3" style="font-size: var(--text-sm);">Artifacts</h3>
+    <div class="artifact-list">
+      {% for artifact in artifacts %}
+      <div class="artifact-item">
+        <span class="badge badge-gray">{{ artifact.type }}</span>
+        {% if artifact.gcs_uri %}
+          <span class="artifact-path">{{ artifact.gcs_uri }}</span>
+        {% else %}
+          <span class="artifact-path">{{ artifact.local_path|default:"—" }}</span>
+        {% endif %}
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+</div>
